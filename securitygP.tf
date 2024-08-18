@@ -1,6 +1,6 @@
 #------ provision the security group
 resource "aws_security_group" "firewall" {
-  name = "ayenco-security-firewall"
+  name = "nginx-server-security-SG"
   ingress {
 
     cidr_blocks = ["0.0.0.0/0"]

@@ -1,7 +1,7 @@
 ## DEPLOY INFRASTRUCTURE TERRAFORM
 
-This project entails the provisioning of an Ec2 instance and immdiately the instance is lunched then appache webserver 
-should be installed with the script using provsioner remote exec but ofcourse the necceesary security settings and firewall will be installed as well
+This project entails the provisioning of an Ec2 instance and immdiately the instance is lunched then nginx webserver 
+should be installed with the script called nginx-server in the root folder but ofcourse the necceesary security settings and firewall will be installed as well
 
 
 ### Projects Requirements
@@ -20,48 +20,24 @@ In the code we see where the ec2 instance was created with all its componensts w
 
 
 provider "aws" {
-  profile = "myaws"
+  
   region  = var.region
 
 }
 
-resource "aws_instance" "mydocker-server" {
+resource "aws_instance" "nginx-server" {
   ami                    = var.ami
   instance_type          = var.instance_type
-  key_name               = "devopskey"
+  key_name               = "devopskey2"
   vpc_security_group_ids = ["${aws_security_group.firewall.id}"]
+  user_data = file("nginx-install.sh")
 
-  #Now run into the resource and run the following application
-
-  connection {
-
-    type        = "ssh"
-    user        = "ec2-user"
-    port        = 22
-    #private_key = file("C:/Users/IDEAPAD/Downloads/devopskey.pem")
-    public_key = file("~/.ssh/devopskey.pub")
-    host        = aws_instance.mydocker-server.public_ip
-
-  }
-  provisioner "remote-exec" {
   
-    inline = [
-    
-      "sudo yum isntall httpd -y",
-      
-      "sudo systectl start httpd",
-      
-      "sudo systectl enable httpd",
-      
-      "sudo yum install git -y"
 
-
-    ]
-
-  }
+  
+  
   tags = {
-  
-    Name = "Firewall"
+    Name = "nginx_server"
   }
 
 }
@@ -120,7 +96,7 @@ variable "ami" {
 
   type    = string
   
-  default = "ami-0a244485e2e4ffd03"
+  default = "ami-0eb260c4d5475b901
 
 }
 
